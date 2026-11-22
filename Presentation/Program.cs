@@ -7,9 +7,26 @@ namespace Presentation
     {
         public static void Main(string[] args)
         {
+            if (args.Length == 0 || (args[0] != "console" && args[0] != "file"))
+            {
+                Console.WriteLine("Первым параметром укажите режим: console или file");
+                return;
+            }
+
+            var mode = args[0];
+
             var services = new ServiceCollection();
             services.AddApplication();
-            services.AddSingleton<IReportPrinter, ConsoleReportPrinter>();
+
+            if (mode == "file")
+            {
+                services.AddSingleton<IReportPrinter, FileReportPrinter>();
+            }
+            else
+            {
+                services.AddSingleton<IReportPrinter, ConsoleReportPrinter>();
+            }
+
             services.AddSingleton<ReportApp>();
 
             var provider = services.BuildServiceProvider();
@@ -20,11 +37,18 @@ namespace Presentation
             app.Run(inputedIds);
         }
 
-        private static string[] GetIds()
+        private static long[] GetIds()
         {
-            Console.WriteLine("Введите id клиентов через пробел:");
+            Console.WriteLine("Введите id клиентов через пробел или запятую:");
             var line = Console.ReadLine();
-            return line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (ClientIdsParser.TryParse(line, out var ids))
+            {
+                return ids;
+            }
+
+            Console.WriteLine("Нужны только числа через пробел или запятую");
+            return [];
         }
     }
 }
