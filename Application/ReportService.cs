@@ -14,7 +14,7 @@ public class ReportService : IReportService
 
     public ClientReportRow GetReport(long clientId)
     {
-        List<OrdersRecord> records = _ordersReader.GetItemsByClientId(clientId);
+        var records = _ordersReader.GetItemsByClientId(clientId);
 
         if (records.Count == 0)
         {
@@ -44,7 +44,7 @@ public class ReportService : IReportService
             }
         }
 
-        string favoriteName = "";
+        string favoriteName = string.Empty;
         int maxQuantity = 0;
         foreach (var pair in quantityByName)
         {
@@ -55,21 +55,16 @@ public class ReportService : IReportService
             }
         }
 
-        var row = new ClientReportRow();
-        row.ClientId = clientId;
-        row.OrdersSum = ordersSum;
-        row.FavoriteItemName = favoriteName;
-        return row;
-    }
+		return new ClientReportRow(clientId, ordersSum, favoriteName);
+	}
 
     private OrderItem MapToOrderItem(OrdersRecord record)
     {
-        var item = new OrderItem();
-        item.ClientId = record.ClientId;
-        item.OrderId = record.OrderId;
-        item.ItemName = record.ItemName;
-        item.ItemQuantity = record.ItemQuantity;
-        item.ItemPrice = record.ItemPrice;
-        return item;
-    }
+		return new OrderItem(
+			record.ClientId,
+			record.OrderId,
+			record.ItemName,
+			record.ItemQuantity,
+			record.ItemPrice);
+	}
 }

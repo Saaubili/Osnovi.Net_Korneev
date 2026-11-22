@@ -13,9 +13,9 @@ namespace Presentation
             _printer = printer;
         }
 
-        public void Run(string[] args)
+        public void Run(long[] clientIds)
         {
-            if (args.Length == 0)
+            if (clientIds.Length == 0)
             {
                 Console.WriteLine("Укажите id клиента (или несколько id через пробел)");
                 return;
@@ -23,14 +23,8 @@ namespace Presentation
 
             var rows = new List<ClientReportRow>();
 
-            foreach (var arg in args)
+            foreach (var clientId in clientIds)
             {
-                if (!long.TryParse(arg, out long clientId))
-                {
-                    Console.WriteLine($"'{arg}' не является числом");
-                    return;
-                }
-
                 try
                 {
                     rows.Add(_reportService.GetReport(clientId));

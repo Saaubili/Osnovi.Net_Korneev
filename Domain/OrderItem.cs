@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain
+﻿namespace Domain
 {
-    public class OrderItem
-    {
-        public long ClientId {  get; set; }
-        public long OrderId { get; set; }
-        public string ItemName { get; set; } = "";
-        public int ItemQuantity { get; set; }
-        public float ItemPrice { get; set; }
-
-    }
+	public record OrderItem(long ClientId, long OrderId, string ItemName, int ItemQuantity, float ItemPrice);
 }
